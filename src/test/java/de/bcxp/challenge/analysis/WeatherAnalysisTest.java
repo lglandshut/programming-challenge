@@ -122,19 +122,16 @@ class WeatherAnalysisTest {
         );
 
         // Assert
-        assertEquals("Weather data can't be null or empty.", thrown.getMessage());
+        assertEquals("Weather data can't be empty.", thrown.getMessage());
     }
 
     @Test
-    @DisplayName("Throws IllegalArgumentException when weather data is null")
-    void getDayWithSmallestTemperatureSpread_whenNull_throwsIllegalArgumentException() {
-        // Test
-        IllegalArgumentException thrown = assertThrows(
-                IllegalArgumentException.class,
+    @DisplayName("Throws NullPointerException when weather data is null")
+    void getDayWithSmallestTemperatureSpread_whenNull_throwsNullPointerException() {
+        // Test & Assert
+        assertThrows(
+                NullPointerException.class,
                 () -> WeatherAnalysis.getDayWithSmallestTemperatureSpread(null)
         );
-
-        // Assert
-        assertEquals("Weather data can't be null or empty.", thrown.getMessage());
     }
 }

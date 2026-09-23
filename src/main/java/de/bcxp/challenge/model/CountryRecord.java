@@ -5,4 +5,8 @@ package de.bcxp.challenge.model;
  */
 public record CountryRecord(String name, String capital, String accession, long population, long area, long gdp,
                             double hdi, int meps) {
+
+    public double populationDensity() {
+        return (double) population / area;
+    }
 }

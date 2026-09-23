@@ -8,7 +8,7 @@ import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * Maps a csv row to a WeatherRecord
+ * Maps a csv row to a CountryRecord
  */
 public class CountryRecordMapper implements RecordMapper<CountryRecord, CSVRecord> {
 

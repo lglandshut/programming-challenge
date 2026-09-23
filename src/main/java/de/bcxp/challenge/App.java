@@ -1,5 +1,6 @@
 package de.bcxp.challenge;
 
+import de.bcxp.challenge.analysis.CountryAnalysis;
 import de.bcxp.challenge.analysis.WeatherAnalysis;
 import de.bcxp.challenge.io.CsvDataReader;
 import de.bcxp.challenge.io.DataReader;
@@ -32,8 +33,6 @@ public final class App {
         DataReader<CountryRecord> countryReader = new CsvDataReader<>(
                 "src/main/resources/de/bcxp/challenge/countries.csv", ";", new CountryRecordMapper());
         List<CountryRecord> countryRecords = countryReader.readData();
-        countryRecords.forEach(System.out::println);
-        String countryWithHighestPopulationDensity = "Some country"; // Your population density analysis function call …
-        System.out.printf("Country with highest population density: %s%n", countryWithHighestPopulationDensity);
+        System.out.printf("Country with highest population density: %s%n", CountryAnalysis.getCountryWithHighestPopulationDensity(countryRecords));
     }
 }

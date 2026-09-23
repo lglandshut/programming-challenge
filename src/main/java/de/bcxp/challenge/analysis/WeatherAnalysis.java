@@ -2,6 +2,7 @@ package de.bcxp.challenge.analysis;
 
 import de.bcxp.challenge.model.WeatherRecord;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -16,16 +17,9 @@ public class WeatherAnalysis {
      */
     public static int getDayWithSmallestTemperatureSpread(List<WeatherRecord> weatherData) {
 
-        if (weatherData == null || weatherData.isEmpty()) {
-            throw new IllegalArgumentException("Weather data can't be null or empty.");
-        }
-
-        WeatherRecord smallestTemperatureSpread = weatherData.get(0);
-        for (WeatherRecord record : weatherData) {
-            if(record.temperatureSpread() < smallestTemperatureSpread.temperatureSpread()) {
-                smallestTemperatureSpread = record;
-            }
-        }
-        return smallestTemperatureSpread.day();
+        return weatherData.stream()
+                .min(Comparator.comparingInt(WeatherRecord::temperatureSpread))
+                .map(WeatherRecord::day)
+                .orElseThrow(() -> new IllegalArgumentException("Weather data can't be empty."));
     }
 }
