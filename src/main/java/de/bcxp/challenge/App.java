@@ -1,5 +1,6 @@
 package de.bcxp.challenge;
 
+import de.bcxp.challenge.analysis.WeatherAnalysis;
 import de.bcxp.challenge.io.CsvDataReader;
 import de.bcxp.challenge.io.DataReader;
 import de.bcxp.challenge.mapping.WeatherRecordMapper;
@@ -20,11 +21,10 @@ public final class App {
     public static void main(String... args) {
 
         // --- TASK 1 ---
-        DataReader<WeatherRecord> weatherReader = new CsvDataReader<>("src/main/resources/de/bcxp/challenge/weather.csv", ",", new WeatherRecordMapper());
+        DataReader<WeatherRecord> weatherReader = new CsvDataReader<>(
+                "src/main/resources/de/bcxp/challenge/weather.csv", ",", new WeatherRecordMapper());
         List<WeatherRecord> records = weatherReader.readData();
-        records.forEach(record -> System.out.println(record.toString()));
-        String dayWithSmallestTempSpread = "Someday";     // Your day analysis function call …
-        System.out.printf("Day with smallest temperature spread: %s%n", dayWithSmallestTempSpread);
+        System.out.printf("Day with smallest temperature spread: %s%n", WeatherAnalysis.getDayWithSmallestTemperatureSpread(records));
 
         // --- TASK 2 ---
         String countryWithHighestPopulationDensity = "Some country"; // Your population density analysis function call …
