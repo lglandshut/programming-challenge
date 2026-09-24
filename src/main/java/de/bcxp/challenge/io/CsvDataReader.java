@@ -11,12 +11,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * DataReader implementation for csv data
  * @param <T> record type
  */
 public class CsvDataReader<T> implements DataReader<T> {
+
+    private static final Logger LOGGER = Logger.getLogger(CsvDataReader.class.getName());
 
     private final String filePath;
     private final String separator;
@@ -40,13 +44,15 @@ public class CsvDataReader<T> implements DataReader<T> {
     }
 
     /**
-     * Reads all data rows (header row excluded) and maps each row with the given mapper
-     * @return records in file order; empty list if the file contains only a header
-     * @throws IllegalArgumentException if the file cannot be read or a row cannot be mapped
+     * Reads all data rows (header row excluded) and maps each row with the given mapper.
+     * Rows that cannot be mapped are skipped and logged as warning.
+     * @return valid records in file order; empty list if the file contains no valid data rows
+     * @throws IllegalArgumentException if the file cannot be read
      */
     @Override
     public List<T> readData() {
         List<T> result = new ArrayList<>();
+        int skippedRows = 0;
 
         CSVFormat format = CSVFormat.DEFAULT.builder()
                 .setDelimiter(separator)
@@ -58,13 +64,21 @@ public class CsvDataReader<T> implements DataReader<T> {
              CSVParser parser = format.parse(reader)) {
 
             for (CSVRecord csvRecord : parser) {
-                result.add(mapper.map(csvRecord));
+                try {
+                    result.add(mapper.map(csvRecord));
+                } catch (IllegalArgumentException e) {
+                    skippedRows++;
+                    LOGGER.log(Level.WARNING, "Skipping invalid row {0} in {1}: {2}",
+                            new Object[]{csvRecord.getRecordNumber(), filePath, e.getMessage()});
+                }
             }
 
         } catch (IOException e) {
             throw new IllegalArgumentException("Error reading file " + filePath, e);
         }
 
+        LOGGER.log(Level.INFO, "Read {0} records from {1}, skipped {2} invalid rows",
+                new Object[]{result.size(), filePath, skippedRows});
         return result;
     }
 }

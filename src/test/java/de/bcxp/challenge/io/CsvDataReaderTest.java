@@ -42,10 +42,10 @@ class CsvDataReaderTest {
         DataReader<WeatherRecord> weatherReader = new CsvDataReader<>("src/main/resources/de/bcxp/challenge/weather.csv", ";", new WeatherRecordMapper());
 
         // Test
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, weatherReader::readData);
+        List<WeatherRecord> weatherData = weatherReader.readData();
 
         // Assert
-        assertEquals("Mapping for Day not found, expected one of [Day,MxT,MnT,AvT,AvDP,1HrP TPcpn,PDir,AvSp,Dir,MxS,SkyC,MxR,Mn,R AvSLP]", thrown.getMessage());
+        assertTrue(weatherData.isEmpty());
     }
 
     @Test
